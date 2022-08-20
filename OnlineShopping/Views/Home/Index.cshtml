@@ -1,0 +1,92 @@
+﻿@{
+    ViewBag.Title = "Online Shopping : Home Page";
+    Layout = "/Views/Shared/_FrontLayout.cshtml";
+    List<OnlineShopping.DAL.Tbl_Product> FeaturedProducts = (List<OnlineShopping.DAL.Tbl_Product>)ViewBag.FeaturedProducts;
+}
+<style>
+    .profPerson .ProfImg {
+        width: 240px;
+        height: 153px;
+    }
+
+    .assistImg .transition {
+        height: 107px;
+    }
+</style> 
+    <div class="homeSlider">
+    <div class="bannerSlider" style="background: url(../images/HomePageBanner1.png) no-repeat center center;">     </div>     <div class="searchOnline clearfix">
+        <div class="container">
+            <div class="olContent fl"><h2>Search Product/Category</h2></div>
+            <div class="olSearch fr">
+                @using (Html.BeginForm("Index", "Search", FormMethod.Post))
+                {
+                    <div>
+                        <input type="text" placeholder="Enter Keywords" onkeypress="return onlynumericOrCharacter();" name="searchKey" class="inputComn houseText">
+                    </div>
+                    <div class="searchIcon">
+                        <button type="button" class="searchBtn" onclick="$(this).parent().parent().submit();">
+                            <img src="/images/searchIcon.png" alt="img">
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div> <!--End Slider--> <!--Start Featured Professionals--> <div class="featuredProfessionals">
+    <div class="container">
+        <h1>Featured Products</h1>
+        <div class="professionSLider">
+            <div class="profSlider">
+                @foreach (var featured in FeaturedProducts)
+                {
+                    <div class="item">
+                        <div class="profPerson">
+
+                            @if (File.Exists(Server.MapPath(System.Configuration.ConfigurationManager.AppSettings["ProductImage"] + "Medium/" + featured.ProductId + "_" + featured.ProductImage)))
+                            {
+                                <img class="ProfImg" title="Click to view product detail" style="cursor:pointer;" onclick="window.location.href ='/search/productdetail?pId=@featured.ProductId'" src="@(System.Configuration.ConfigurationManager.AppSettings["ProductImage"] + "Medium/" + featured.ProductId+"_"+featured.ProductImage)" />
+                            }
+                            else
+                            {
+                                <img class="ProfImg" title="Click to view product detail" style="cursor:pointer;" onclick="window.location.href ='/search/productdetail?pId=@featured.ProductId'" src="@(System.Configuration.ConfigurationManager.AppSettings["ProductImage_Default_Medium"])" alt="" />
+                            }
+                            <div class="profMid clearfix">
+                                <h2 title="Click to view product detail" style="cursor:pointer;"><a href="/search/productdetail?pId=@featured.ProductId">  @featured.ProductName</a></h2>                                 <div class="leftprof fl">
+                                    <text>
+                                        Category <a title="Products of this category" style="cursor:pointer;" href="/search?searchkey=@featured.Tbl_Category.CategoryName">@featured.Tbl_Category.CategoryName</a>
+                                    </text>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="profLast clearfix">
+                            <div class="leftprofLast fl"><h4>Price</h4></div>
+                            <div class="rightprofLast fr"><h5>@(featured.Price)</h5></div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="left-symbol"><img src="/Images/sliderRightarrow.png" alt="images"></div>             <div class="right-symbol"><img src="/Images/sliderLeftarrow.png" alt="images"></div>
+        </div>
+    </div>
+    <br />
+    <div style="margin-left:300px">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d497511.11462828325!2d79.92880522625092!3d13.04804380481973!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a5265ea4f7d3361%3A0x6e61a70b6863d433!2sChennai%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1602225627955!5m2!1sen!2sin" width="400" height="300" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+    </div>
+    
+</div>
+<!--End Featured Professionals-->
+@section Scripts{
+    <script>
+      window.onload = function () {
+      if ('@Request.QueryString["returnUrl"]' != '') {
+       $('#returnUrl').val('@Request.QueryString["returnUrl"]')
+       $('.loginpopup').trigger('click');
+    }
+
+    if ('@(Request.UrlReferrer !=null ?Request.UrlReferrer.AbsolutePath.ToLower():"")' == '/account/resetpassword') {
+                   $('.loginpopup').trigger('click');
+    }
+                          if('@TempData["VerificationLinlMsg"]'!='')             {
+     swal('@TempData["VerificationLinlMsg"]', '', 'success');
+          }
+      }     </script> }  
